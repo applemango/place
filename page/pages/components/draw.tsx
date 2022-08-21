@@ -1,15 +1,13 @@
-import { useEffect } from "react"
 import React from "react"
 import { useState } from "react"
-import Image from "next/image";
-
-import styles from "./styles/draw.module.scss"
 
 import io from "socket.io-client";
 
-let WS_DOMAIN: String = "192.168.1.12";
-let WS_PORT: number = 5000;
-let socket = io(`ws://${WS_DOMAIN}:${WS_PORT}`);
+import { getUrl } from "../../lib/main"
+
+import styles from "./styles/draw.module.scss"
+
+let socket = io(getUrl("","ws"))
 
 type Props = {
     data: Array<any>
@@ -59,9 +57,4 @@ const Draw = ({ x, y, data, color, move }:Props) => {
         </div>
     )
 }
-//socket.emit("json", {"position":index,"color":data[index] == "0" ? "#000" : "0"})
-//data[index] = data[index] == "0" ? "#000" : "0"
-
-//socket.emit("json", {"position":index,"color":data[index] == "0" ? "#000" : "0"})
-//data[index] = data[index] == "0" ? "#000" : "0"
 export default Draw

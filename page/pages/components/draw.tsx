@@ -15,11 +15,13 @@ type Props = {
     x: number
     y: number
     move: Function
+    draw?: boolean
 }
-const Draw = ({ x, y, data, color, move }:Props) => {
+const Draw = ({ x, y, data, color, move, draw = true }:Props) => {
     const [md, setMd] = useState(false)
     const [size, setSize] = useState(30)
     function draw_color(index: number) {
+        if(!draw) return false
         socket.emit("json", {"position":index, "color":color})
         data[index] = color
     }

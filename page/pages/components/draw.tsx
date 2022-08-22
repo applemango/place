@@ -6,7 +6,7 @@ import io from "socket.io-client";
 
 import { getUrl } from "../../lib/main"
 
-import styles from "./styles/draw.module.scss"
+import { DataToUrl } from "../../lib/data"
 
 let socket = io(getUrl("","ws"))
 
@@ -22,9 +22,10 @@ type Props = {
     size?: number
 }
 const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, size = 32 }:Props) => {
-    //const [size, setSize] = useState(32)
     const [md, setMd] = useState(false)
     const [download, setDownload] = useState("")
+    const [url, setUrl] = useState("")
+    const [nowLocation, setNowLocation] = useState("")
     const canvasRef = useRef(null);
     const getContext = (): CanvasRenderingContext2D => {
         const canvas: any = canvasRef.current;
@@ -71,9 +72,13 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
             }
         }
     })
+    useEffect(() => {
+        setNowLocation(location.origin)
+    },[])
     return (
         <div>
-            <a onClick={getDataUrl} href={download} download="image.png" style={{color:"#fff"}}>download</a>
+            <a onClick={getDataUrl} href={download} download="image.png" style={{color:"#fff" ,marginRight:"15px"}}>download</a>
+            <a onMouseDown={() => {setUrl(DataToUrl(data))}} href={nowLocation + "/view?data=" + url} target="_blank" style={{color:"#fff"}}>copy link</a>
             <div
             onMouseDown={() => {setMd(true)}}
             onMouseUp={() => {setMd(false)}}

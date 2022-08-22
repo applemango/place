@@ -7,6 +7,8 @@ import Head from 'next/head'
 import Draw from "./components/draw"
 import Selector from "./components/selector"
 
+import { UrlToData } from '../lib/data';
+
 import styles from './styles/index.module.scss'
 
 const Home: NextPage = () => {
@@ -32,13 +34,6 @@ const Home: NextPage = () => {
         )
     }
     const router = useRouter()
-    const textToArray = (text: any) => {
-        let main = text.slice(1,-1).split(",")
-        for (let i = 0; i < main.length; i++) {
-            main[i] = "#"+main[i]
-        }
-        return main
-    }
     useEffect(() => {
         if(router.query.x && router.query.y) {
             setSizeY(Number(router.query.y))
@@ -46,7 +41,7 @@ const Home: NextPage = () => {
             setData(reset_list(Number(router.query.x), Number(router.query.y), "#fff"))
         }
         if(router.query.data && !Array.isArray(router.query.data)) {
-            setData(textToArray(router.query.data))
+            setData(UrlToData(router.query.data))
         }
         if(router.query.size) {
             setSize(Number(router.query.size))
@@ -73,4 +68,4 @@ const Home: NextPage = () => {
     )
 }
 export default Home
-//http://127.0.0.1:3000/draw?x=32&y=32&size=64&data=[fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,8BC34A,8BC34A,8BC34A,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,8BC34A,4CAF50,8BC34A,4CAF50,fff,fff,fff,795548,fff,4CAF50,8BC34A,4CAF50,4CAF50,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,4CAF50,4CAF50,4CAF50,4CAF50,4CAF50,4CAF50,fff,795548,795548,fff,8BC34A,4CAF50,4CAF50,8BC34A,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,4CAF50,8BC34A,4CAF50,8BC34A,fff,4CAF50,795548,fff,4CAF50,8BC34A,8BC34A,8BC34A,4CAF50,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,795548,4CAF50,4CAF50,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,4CAF50,4CAF50,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,795548,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,795548,E91E63,E91E63,FF5722,FF5722,FF5722,FF5722,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,795548,E91E63,E91E63,E91E63,E91E63,FF9800,FF9800,FF5722,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,795548,795548,795548,795548,E91E63,E91E63,E91E63,FF9800,FF9800,FF5722,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF9800,FF9800,FF5722,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF9800,FF9800,FF5722,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF9800,FF9800,FF9800,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF9800,FF9800,FFEB3B,FFC107,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF9800,FFEB3B,FFC107,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF5722,FF9800,FF9800,FFC107,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF5722,FFC107,FFC107,FFC107,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,E91E63,FF5722,FF5722,FFC107,FF9800,FF9800,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,E91E63,E91E63,E91E63,FF5722,FF5722,FFEB3B,FFC107,FF9800,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,E91E63,E91E63,FFEB3B,FF5722,FF5722,FFEB3B,FFC107,FF9800,FF9800,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFEB3B,FFEB3B,FFEB3B,FFC107,FFC107,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFC107,fff,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,FFC107,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff,fff]
+//http://127.0.0.1:3000/draw?data=H4sIAAAAAAAAA62OywrDMAwE_1VHvdH_H6q4KUnJxoG6cxF4diVX_YCIoFcW7pHVk6-aB5XZQUb9rknxVhcB_Z1Eu7_OTHXOJBElUTQ3dngidxQYurkL0MGid3ebe7Vr4OSRPnz0-qk3Q_4TiDB3oPdAhBr6_jugQ-P6hqri42fm3h79E6v9le1_7r8AOxuyTQAEAAA

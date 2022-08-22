@@ -6,25 +6,20 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Head from 'next/head'
 import Draw from "./components/draw"
 
+import { UrlToData } from "../lib/data"
+
 import styles from './styles/index.module.scss'
 
 const View: NextPage = () => {
     const [sizeX,setSizeX] = useState(32)
     const [sizeY,setSizeY] = useState(32)
-    const [list, setData] = useState([])
+    const [list, setData]:any = useState([])
     const [color, setColor] = useState("#000")
     const [canMove, setCanMove] = useState(true)
     const router = useRouter()
-    const textToArray = (text: any) => {
-        let main = text.slice(1,-1).split(",")
-        for (let i = 0; i < main.length; i++) {
-            main[i] = "#"+main[i]
-        }
-        return main
-    }
     useEffect(() => {
         if(router.query.data && !Array.isArray(router.query.data)) {
-            setData(textToArray(router.query.data))
+            setData(UrlToData(router.query.data))
         }
     },[router.query])
     return (
@@ -39,7 +34,7 @@ const View: NextPage = () => {
                 limitToBounds={true}
                 >
                     <TransformComponent>
-                    <Draw x={sizeX} y={sizeY} data={list} color={color} move={setCanMove} draw={false}/>
+                        <Draw x={sizeX} y={sizeY} data={list} color={color} move={setCanMove} draw={false}/>
                     </TransformComponent>
                 </TransformWrapper>
             </div>

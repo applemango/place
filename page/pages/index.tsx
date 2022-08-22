@@ -64,7 +64,7 @@ const Home: NextPage = () => {
                 limitToBounds={false}
                 >
                     <TransformComponent>
-                    <Draw x={sizeX} y={sizeY} data={list} color={color} move={setCanMove}/>
+                        <Draw x={sizeX} y={sizeY} data={list} color={color} move={setCanMove}/>
                     </TransformComponent>
                 </TransformWrapper>
             </div>

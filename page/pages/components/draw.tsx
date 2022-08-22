@@ -1,5 +1,6 @@
 import React from "react"
 import { useState } from "react"
+import {useEffect, useRef} from 'react';
 
 import io from "socket.io-client";
 
@@ -16,47 +17,89 @@ type Props = {
     y: number
     move: Function
     draw?: boolean
+    setData?: Function
+    offline?: boolean
+    size?: number
 }
-const Draw = ({ x, y, data, color, move, draw = true }:Props) => {
+const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, size = 32 }:Props) => {
+    //const [size, setSize] = useState(32)
     const [md, setMd] = useState(false)
-    const [size, setSize] = useState(30)
-    function draw_color(index: number) {
-        if(!draw) return false
+    const [download, setDownload] = useState("")
+    const canvasRef = useRef(null);
+    const getContext = (): CanvasRenderingContext2D => {
+        const canvas: any = canvasRef.current;
+        return canvas.getContext('2d');
+    };
+    const getPosition = (e: React.MouseEvent<HTMLElement>):number => {
+        const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+        const scale = width / (size * x)
+        const mouseX = e.clientX - left
+        const mouseY = e.clientY - top
+        const X = Math.floor(mouseX / scale / size)
+        const Y = Math.floor(mouseY / scale / size)
+        const Position = Y * y + X
+        return Position
+    }
+    const change_dot = (i:number, color:string):void => {
+        if(!setData) return
+        setData(
+            data.map((d:any, index:number) => (
+                index == i ? color : d
+            ))
+        )
+    }
+    const getDataUrl = ():void => {
+        const canvas: any = canvasRef.current;
+        setDownload(canvas.toDataURL("image/png"))
+    }
+    const draw_color = (index: number):void => {
+        if(!draw) return
+        if(offline) {
+            change_dot(index, color)
+            return
+        }
+        if(data[index] == color) return
         socket.emit("json", {"position":index, "color":color})
         data[index] = color
     }
+    useEffect(() => {
+        const ctx: CanvasRenderingContext2D = getContext();
+        for (let i = 0; i < y; i++) {
+            for (let j = 0; j < x; j++) {
+                ctx.fillStyle = data[i*y+j]
+                ctx.fillRect(j*size,i*size,size,size)
+            }
+        }
+    })
     return (
-        <div className={styles.main}
-        onMouseDown={() => {setMd(true)}}
-        onMouseUp={() => {setMd(false)}}
-        >
-            <div className={styles.main_} style={{
-                width: x*size
-                ,height: y*size
-            }}>
-                { data.map((c, index) => (
-                    <div key={index} className={styles.dot} style={{
-                        backgroundColor: c == "0" ? "#fff" : c
-                        ,width: size
-                        ,height: size
-                    }}
-                    onMouseOver={() => {
-                        if(md) {
-                            move(false)
-                            draw_color(index)
-                        }
-                    }}
-                    onMouseDown={() => {
-                        move(false)
-                        draw_color(index)
-                    }}
-                    onMouseUp={() => {
-                        move(true)
-                    }}
-                    ></div>
-                )) }
+        <div>
+            <a onClick={getDataUrl} href={download} download="image.png" style={{color:"#fff"}}>download</a>
+            <div
+            onMouseDown={() => {setMd(true)}}
+            onMouseUp={() => {setMd(false)}}
+            >
+                <canvas
+                onMouseOver={(e: React.MouseEvent<HTMLElement>):void => {
+                    if(!md) return
+                    move(false)
+                    draw_color(getPosition(e))
+                }}
+                onMouseMove={(e: React.MouseEvent<HTMLElement>):void => {
+                    if(!md) return
+                    move(false)
+                    draw_color(getPosition(e))
+                }}
+                onMouseDown={(e: React.MouseEvent<HTMLElement>):void => {
+                    move(false)
+                    draw_color(getPosition(e))
+                }}
+                onMouseUp={() => {
+                    move(true)
+                }}
+                width={size*x} height={size*y} ref={canvasRef}
+                />
             </div>
         </div>
-    )
+    );
 }
 export default Draw

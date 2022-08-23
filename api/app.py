@@ -13,17 +13,18 @@ cors = CORS(app, responses={r"/*": {"origins": "*"}})
 
 
 data = "(ysqGgWjYBSMV!nb8EywAE!="
+sizeX,sizeY = 32,32
 
 @app.route("/get/data", methods=["GET"])
 @cross_origin()
 def get_data():
-    return jsonify({"data":data})
+    return jsonify({"data":data,"sizeX":sizeX,"sizeY":sizeY})
 
 socketIo = SocketIO(app, cors_allowed_origins="*")
 @socketIo.on("json")
 def get_json(json):
-    global data
-    data = json["data"]
+    global data, sizeX, sizeY
+    data,sizeX,sizeY = json["data"],json["sizeX"],json["sizeY"]
     send(json, json=True, broadcast=True)
 
 if __name__ == '__main__':

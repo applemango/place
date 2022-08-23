@@ -68,7 +68,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
             for (let j = 0; j < x; j++) {
                 ctx.fillStyle = data[i*y+j]
                 ctx.fillRect(j*size,i*size,size,size)
-                if(hover && mousePosition == i*y+j) {
+                if(draw && hover && mousePosition == i*y+j) {
                     ctx.lineWidth = lw
                     ctx.strokeStyle = color == data[i*y+j] ? "#fff" == data[i*y+j] ? "#000" : "#fff" : color
                     ctx.strokeRect(j*size+Math.floor(lw/2),i*size+Math.floor(lw/2),size-lw,size-lw)
@@ -82,7 +82,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
     return (
         <div>
             <a onClick={getDataUrl} href={download} download="image.png" style={{color:"#fff" ,marginRight:"15px"}}>download</a>
-            <a onMouseDown={() => {setUrl(DataToUrl(data))}} href={nowLocation + "/view?data=" + url} target="_blank" rel="noopener noreferrer" style={{color:"#fff"}}>copy link</a>
+            <a onMouseDown={() => {setUrl(DataToUrl(data))}} href={`${nowLocation}/view?size=${size}&x=${x}&y=${y}&data=${url}`} target="_blank" rel="noopener noreferrer" style={{color:"#fff"}}>copy link</a>
             <div
             onMouseDown={() => {setMd(true)}}
             onMouseUp={() => {setMd(false)}}
@@ -118,7 +118,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
                     }
                     if(draw && !offline) {
                         const t = DataToUrl(data)
-                        socket.emit("json", {"data":t})
+                        socket.emit("json", {"data":t,"sizeX":x, "sizeY":y})
                     }
                 }}
                 onMouseEnter={(e) => {

@@ -12,7 +12,7 @@ import Selector from "./components/selector"
 import styles from './styles/index.module.scss'
 import { get_data } from "../lib/get"
 import { getUrl } from "../lib/main"
-import { UrlToData } from "../lib/data"
+import { DataToUrl, UrlToData } from "../lib/data"
 
 let socket = io(getUrl("","ws"))
 
@@ -21,6 +21,8 @@ const Home: NextPage = () => {
         const res = await get_data();
         if(res) {
             changeData(res.data)
+            setSizeX(res.sizeX)
+            setSizeY(res.sizeY)
         }
         console.log(res)
     }
@@ -41,6 +43,8 @@ const Home: NextPage = () => {
     const t = () => {
         socket.on("json", (d:any) => {
             changeData(d.data)
+            setSizeX(d.sizeX)
+            setSizeY(d.sizeY)
         })
     }
     const changeData = (data:string) => {
@@ -52,10 +56,18 @@ const Home: NextPage = () => {
         get()
     },[])
     useEffect(() => {
+        if(router.query.data && router.query.x && router.query.y) {
+            socket.emit("json", {"data":router.query.data,"sizeX":Number(router.query.x), "sizeY":Number(router.query.y)})
+            return
+        }
+        if(router.query.x && router.query.y) {
+            socket.emit("json", {"data":DataToUrl(reset_list(Number(router.query.x),Number(router.query.y),"#fff")),"sizeX":Number(router.query.x), "sizeY":Number(router.query.y)})
+            return
+        }
         if(router.query.data && !Array.isArray(router.query.data)) {
             socket.emit("json", {"data":router.query.data})
         }
-    },[router.query.data])
+    },[router.query])
     return (
         <div className={styles.main}>
             <Head>

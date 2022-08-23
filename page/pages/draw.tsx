@@ -56,7 +56,7 @@ const Home: NextPage = () => {
                     </TransformComponent>
                 </TransformWrapper>
             </div>
-            <Selector setColor={setColor} colors={colors} />
+            <Selector setColor={setColor} colors={colors} now={color} />
         </div>
     )
 }

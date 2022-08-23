@@ -24,6 +24,8 @@ type Props = {
 }
 const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, size = 32 }:Props) => {
     const [md, setMd] = useState(false)
+    const [hover, setHover] = useState(false)
+    const [mousePosition, setMousePosition] = useState(-1)
     const [download, setDownload] = useState("")
     const [url, setUrl] = useState("")
     const [nowLocation, setNowLocation] = useState("")
@@ -61,10 +63,16 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
     }
     useEffect(() => {
         const ctx: CanvasRenderingContext2D = getContext();
+        const lw = 4
         for (let i = 0; i < y; i++) {
             for (let j = 0; j < x; j++) {
                 ctx.fillStyle = data[i*y+j]
                 ctx.fillRect(j*size,i*size,size,size)
+                if(hover && mousePosition == i*y+j) {
+                    ctx.lineWidth = lw
+                    ctx.strokeStyle = color == data[i*y+j] ? "#fff" == data[i*y+j] ? "#000" : "#fff" : color
+                    ctx.strokeRect(j*size+Math.floor(lw/2),i*size+Math.floor(lw/2),size-lw,size-lw)
+                }
             }
         }
     })
@@ -78,6 +86,9 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
             <div
             onMouseDown={() => {setMd(true)}}
             onMouseUp={() => {setMd(false)}}
+            style={{
+                cursor: "none"
+            }}
             >
                 <canvas
                 onMouseOver={(e: React.MouseEvent<HTMLElement>):void => {
@@ -86,6 +97,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
                     draw_color(getPosition(e))
                 }}
                 onMouseMove={(e: React.MouseEvent<HTMLElement>):void => {
+                    setMousePosition(getPosition(e))
                     if(!md) return
                     move(false)
                     draw_color(getPosition(e))
@@ -108,6 +120,12 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
                         const t = DataToUrl(data)
                         socket.emit("json", {"data":t})
                     }
+                }}
+                onMouseEnter={(e) => {
+                    setHover(true)
+                }}
+                onMouseLeave={(e) => {
+                    setHover(false)
                 }}
                 width={size*x} height={size*y} ref={canvasRef}
                 />

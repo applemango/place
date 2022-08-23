@@ -43,7 +43,7 @@
     width: 45px;
     height: 45px;
     cursor: pointer;
-    transition: scale 0.3s cubic-bezier(1,0,.38,2.1);
+    transition: scale 0.3s cubic-bezier(1,0,.38,2.1),border-radius .6s;
 }
 .color:first-child {
     border-top-left-radius: 4px;
@@ -60,4 +60,9 @@
 }
 .color:active {
     scale: 1.2;
+    transition: scale 0.15s cubic-bezier(1,0,.38,2.1),border-radius .6s;
+}
+.active {
+    scale: 1.05;
+    border-radius: 2px;
 }

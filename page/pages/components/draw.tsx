@@ -1,6 +1,7 @@
 import React from "react"
 import { useState } from "react"
 import {useEffect, useRef} from 'react';
+import { useRouter } from 'next/router'
 
 import io from "socket.io-client";
 
@@ -27,6 +28,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
     const [url, setUrl] = useState("")
     const [nowLocation, setNowLocation] = useState("")
     const canvasRef = useRef(null);
+    const router = useRouter()
     const getContext = (): CanvasRenderingContext2D => {
         const canvas: any = canvasRef.current;
         return canvas.getContext('2d');
@@ -55,13 +57,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
     }
     const draw_color = (index: number):void => {
         if(!draw) return
-        if(offline) {
-            change_dot(index, color)
-            return
-        }
-        if(data[index] == color) return
-        socket.emit("json", {"position":index, "color":color})
-        data[index] = color
+        change_dot(index, color)
     }
     useEffect(() => {
         const ctx: CanvasRenderingContext2D = getContext();
@@ -78,7 +74,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
     return (
         <div>
             <a onClick={getDataUrl} href={download} download="image.png" style={{color:"#fff" ,marginRight:"15px"}}>download</a>
-            <a onMouseDown={() => {setUrl(DataToUrl(data))}} href={nowLocation + "/view?data=" + url} target="_blank" style={{color:"#fff"}}>copy link</a>
+            <a onMouseDown={() => {setUrl(DataToUrl(data))}} href={nowLocation + "/view?data=" + url} target="_blank" rel="noopener noreferrer" style={{color:"#fff"}}>copy link</a>
             <div
             onMouseDown={() => {setMd(true)}}
             onMouseUp={() => {setMd(false)}}
@@ -100,6 +96,18 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
                 }}
                 onMouseUp={() => {
                     move(true)
+                    if(draw && offline) {
+                        const t = DataToUrl(data)
+                        const origin = location.origin
+                        const path = location.pathname
+                        const url = `${origin}${path}?size=${size}&x=${x}&y=${y}&data=${t}`
+                        setUrl(t)
+                        router.replace(url)
+                    }
+                    if(draw && !offline) {
+                        const t = DataToUrl(data)
+                        socket.emit("json", {"data":t})
+                    }
                 }}
                 width={size*x} height={size*y} ref={canvasRef}
                 />

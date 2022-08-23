@@ -12,7 +12,7 @@ app.config.from_mapping(
 cors = CORS(app, responses={r"/*": {"origins": "*"}})
 
 
-data = ["#fff" for i in range(32*32)]
+data = "(ysqGgWjYBSMV!nb8EywAE!="
 
 @app.route("/get/data", methods=["GET"])
 @cross_origin()
@@ -22,7 +22,8 @@ def get_data():
 socketIo = SocketIO(app, cors_allowed_origins="*")
 @socketIo.on("json")
 def get_json(json):
-    data[json["position"]] = json["color"]
+    global data
+    data = json["data"]
     send(json, json=True, broadcast=True)
 
 if __name__ == '__main__':

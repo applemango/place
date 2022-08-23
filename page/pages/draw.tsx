@@ -26,13 +26,6 @@ const Home: NextPage = () => {
     const [color, setColor] = useState("#000")
     const [colors, setColors] = useState(["#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#03A9F4","#00BCD4","#009688","#4CAF50","#8BC34A","#FFEB3B","#FFC107","#FF9800","#FF5722","#795548","#78909C","#fff","#E0E0E0","#BDBDBD","#9E9E9E","#424242","#212121","#000"])
     const [canMove, setCanMove] = useState(true)
-    const change_dot = (i:number, color:string) => {
-        setData(
-            list.map((d:any, index:number) => (
-                index == i ? color : d
-            ))
-        )
-    }
     const router = useRouter()
     useEffect(() => {
         if(router.query.x && router.query.y) {
@@ -68,4 +61,3 @@ const Home: NextPage = () => {
     )
 }
 export default Home
-//http://127.0.0.1:3000/draw?data=H4sIAAAAAAAAA62OywrDMAwE_1VHvdH_H6q4KUnJxoG6cxF4diVX_YCIoFcW7pHVk6-aB5XZQUb9rknxVhcB_Z1Eu7_OTHXOJBElUTQ3dngidxQYurkL0MGid3ebe7Vr4OSRPnz0-qk3Q_4TiDB3oPdAhBr6_jugQ-P6hqri42fm3h79E6v9le1_7r8AOxuyTQAEAAA

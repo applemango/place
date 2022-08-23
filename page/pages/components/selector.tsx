@@ -8,6 +8,7 @@ type Props = {
     colors: string[]
 }
 const Selector = ({ setColor, colors }:Props) => {
+    if(!colors) return (<div></div>)
     return (
         <div className={styles.main}>
             <div>

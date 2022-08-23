@@ -2,7 +2,7 @@ import { gzipSync, unzipSync } from "zlib"
 import { Buffer } from "buffer"
 
 export function UrlToData(data: string):Array<string> {
-    const d = unzip(data)
+    const d = unzip(data.replaceAll("!","AAA").replaceAll("(","H4sIAAAAAAAAA"))
     let r:string[] = []
     for (let i = 0; i < d.length; i++) {
         r.push(replaceArray(
@@ -38,13 +38,15 @@ function gzip(data:string):string {
     const b = encodeURIComponent(a)
     const c = gzipSync(b)
     const d = c.toString("base64")
-    const r = d.replaceAll("/","_").replaceAll("+","-").slice(0, -1)
-    return r
+    const r = d.replaceAll("/","_").replaceAll("+","-")
+    const result = r.replaceAll("H4sIAAAAAAAAA","(").replaceAll("AAA","!")
+    return result
 }
 function unzip(data:string):string {
-    const a = (data + "=").replaceAll("-","+").replaceAll("_","/")
+    const a = (data).replaceAll("-","+").replaceAll("_","/")
     const b = Buffer.from(data, "base64")
     const c = unzipSync(b)
     const r = decodeURIComponent(c.toString("utf-8"))
     return r
 }
+//(62OywrDMAwE_1VHvdH_H6q4KUnJxoG6cxF4diVX_YCIoFcW7pHVk6-aB5XZQUb9rknxVhcB_Z1Eu7_OTHXOJBElUTQ3dngidxQYurkL0MGid3ebe7Vr4OSRPnz0-qk3Q_4TiDB3oPdAhBr6_jugQ-P6hqri42fm3h79E6v9le1_7r8AOxuyTQAE!

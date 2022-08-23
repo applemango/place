@@ -87,7 +87,7 @@ const Draw = ({ x, y, data, color, move, draw = true, setData, offline = false, 
             onMouseDown={() => {setMd(true)}}
             onMouseUp={() => {setMd(false)}}
             style={{
-                cursor: "none"
+                cursor: draw ? "pointer" : "default"
             }}
             >
                 <canvas
